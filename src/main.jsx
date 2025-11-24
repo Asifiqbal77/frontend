@@ -4,6 +4,10 @@
 
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap.js";
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+
 import { RouterProvider } from 'react-router-dom';
 import route from './Paths.jsx'
 
