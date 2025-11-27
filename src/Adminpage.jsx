@@ -87,7 +87,15 @@ function Adminpage() {
             <Link to = '/manage'>
             <button className="btn btn-primary btn-lg px-4" style={styles.quickBtn}>Manage Tours</button>
             </Link>
-            <button className="btn btn-primary btn-lg" style={styles.quickBtn}>View Bookings</button>
+
+               <Link to="/admin/bookings">
+    <button className="btn btn-primary btn-lg" style={styles.quickBtn}>
+      View Bookings
+    </button>
+  </Link>
+
+
+            {/* <button className="btn btn-primary btn-lg" style={styles.quickBtn}>View Bookings</button> */}
             <button className="btn btn-primary btn-lg" style={styles.quickBtn}>Analytics</button>
           </div>
         </div>

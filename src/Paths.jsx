@@ -13,6 +13,12 @@ import ViewAllTours from "./ViewAllTours";
 import UpdateTour from "./UpdateTours";
 import DeleteTour from "./DeleteTour";
 import CategoryPages from "./CategoryPages";
+
+import PaymentSuccess from "./PaymentSucces";
+import PaymentCancel from "./PaymentCancel";
+import ViewBookings from "./ViewBooking";
+
+
 const route = createBrowserRouter([
 
 
@@ -29,6 +35,13 @@ const route = createBrowserRouter([
     {path:"/views" , element:<ViewAllTours />},
     {path: "/update", element: <UpdateTour/>},
     {path: "/delete", element: <DeleteTour/>},
+
+    {path: "/payment/success", element: <PaymentSuccess />},
+    {path: "Payment-Success" , element: <PaymentSuccess />},
+
+    {path: "/payment/cancel", element: <PaymentCancel />},
+    {path: "Payment-Cancel" , element: <PaymentCancel />},
+    {path: "/admin/bookings", element: <ViewBookings />},
 
 ]);
 export default route;
