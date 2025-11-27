@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { createTour } from "./services/api";
 
 function CreateTour() {
   const navigate = useNavigate();
@@ -13,6 +14,9 @@ function CreateTour() {
     imageUrl: "",
     description: "",
   });
+
+  // files state for optional image upload
+  const [files, setFiles] = useState([]);
 
   const styles = {
     page: {
@@ -62,10 +66,17 @@ function CreateTour() {
   };
 
   function updateField(key, value) {
-    setForm((form) => ({ ...form, [key]: value }));
+    setForm((f) => ({ ...f, [key]: value }));
   }
 
-  function handleSubmit(e) {
+  function validate() {
+    if (!form.name || !form.location) return "Name and Location are required.";
+    if (form.price && Number(form.price) < 0) return "Price must be >= 0";
+    if (form.maxPeople && Number(form.maxPeople) < 1) return "Max People must be >= 1";
+    return null;
+  }
+
+  async function handleSubmit(e) {
     e.preventDefault();
     const err = validate();
     if (err) {
@@ -73,22 +84,41 @@ function CreateTour() {
       return;
     }
 
-    // Build tour object - replace this with an API call to save on server
-    const newTour = {
-      name: form.name.trim(),
-      location: form.location.trim(),
-      duration: form.duration.trim(),
-      price: Number(form.price),
-      maxPeople: Number(form.maxPeople),
-      imageUrl: form.imageUrl.trim(),
-      description: form.description.trim(),
-      createdAt: new Date().toISOString(),
-    };
+    try {
+      let payload;
 
-    
-    // console.log("Creating tour:", newTour);
-    // alert("Tour created (demo). Check console for object.");
-    // navigate("/manage");
+      // If files selected -> use FormData with images field (backend multer expects 'images')
+      if (files && files.length > 0) {
+        payload = new FormData();
+        payload.append("name", form.name.trim());
+        payload.append("location", form.location.trim());
+        payload.append("duration", form.duration.trim());
+        payload.append("price", form.price);
+        payload.append("maxPeople", form.maxPeople);
+        payload.append("description", form.description.trim());
+        // append files
+        Array.from(files).forEach((file) => payload.append("images", file));
+      } else {
+        // No files -> send JSON; backend will use imageUrl if provided
+        payload = {
+          name: form.name.trim(),
+          location: form.location.trim(),
+          duration: form.duration.trim(),
+          price: form.price,
+          maxPeople: form.maxPeople,
+          imageUrl: form.imageUrl.trim(),
+          description: form.description.trim(),
+        };
+      }
+
+      const res = await createTour(payload);
+      alert(res.data.message || "Tour created");
+      // navigate to manage page (you had navigate("/manage") commented out previously)
+      navigate("/manage");
+    } catch (err) {
+      console.error(err);
+      alert(err?.response?.data?.message || "Failed to create tour");
+    }
   }
 
   return (
@@ -105,7 +135,7 @@ function CreateTour() {
           <div className="row g-3">
             <div className="col-md-6">
               <label htmlFor="tourName" style={styles.label}>
-                Tour Name 
+                Tour Name
               </label>
               <input
                 id="tourName"
@@ -128,13 +158,12 @@ function CreateTour() {
                 type="text"
                 className="form-control"
                 style={styles.input}
-            
               />
             </div>
 
             <div className="col-md-6">
               <label htmlFor="duration" style={styles.label}>
-                Duration 
+                Duration
               </label>
               <input
                 id="duration"
@@ -148,7 +177,7 @@ function CreateTour() {
 
             <div className="col-md-6">
               <label htmlFor="price" style={styles.label}>
-                Price (PKR) 
+                Price (PKR)
               </label>
               <input
                 id="price"
@@ -164,7 +193,7 @@ function CreateTour() {
 
             <div className="col-md-6">
               <label htmlFor="maxPeople" style={styles.label}>
-                Max People 
+                Max People
               </label>
               <input
                 id="maxPeople"
@@ -179,7 +208,7 @@ function CreateTour() {
 
             <div className="col-md-6">
               <label htmlFor="imageUrl" style={styles.label}>
-                Image URL
+                Image URL (optional)
               </label>
               <input
                 id="imageUrl"
@@ -189,6 +218,24 @@ function CreateTour() {
                 className="form-control"
                 placeholder="hunza.jpg"
                 style={styles.input}
+              />
+              <div className="form-text" style={styles.smallMuted}>
+                Or upload image files below.
+              </div>
+            </div>
+
+            <div className="col-12">
+              <label htmlFor="images" style={styles.label}>
+                Upload Images (optional)
+              </label>
+              <input
+                id="images"
+                multiple
+                onChange={(e) => setFiles(e.target.files)}
+                type="file"
+                className="form-control"
+                style={styles.input}
+                accept="image/*"
               />
             </div>
 
@@ -201,7 +248,6 @@ function CreateTour() {
                 value={form.description}
                 onChange={(e) => updateField("description", e.target.value)}
                 className="form-control"
-                // rows="3"
                 style={styles.input}
               />
             </div>

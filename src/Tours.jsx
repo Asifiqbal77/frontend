@@ -5,56 +5,98 @@ import { getTours } from "./services/api";
 function Tours() {
   const [tours, setTours] = useState([]);
 
+  // Fixed locations for landing page
+  const fixedLocations = [
+    "hunza",
+    "naran",
+    "peshawar",
+    "lahore",
+    "multan",
+    "swat",
+    "murree",
+    "chitral",
+    "islamabad",
+    // "karachi",
+    // "neelum",
+    // "asif"
+  ];
+
   useEffect(() => {
     async function fetchTours() {
       try {
         const res = await getTours();
-        setTours(res.data);
-      } catch (err) {
-        alert("Failed to fetch tours");
+        setTours(res.data || []);
+      } catch (error) {
+        console.error("Error loading tours:", error);
       }
     }
     fetchTours();
   }, []);
 
+  // Get one tour per fixed location
+  const featuredTours = fixedLocations.map((loc) =>
+    tours.find(
+      (tour) =>
+        String(tour.location || "").toLowerCase() === loc.toLowerCase()
+    )
+  );
+
   return (
-    <section className="container mt-5">
-      <div
-  className="d-flex justify-content-between align-items-center mb-3"
-  style={{ backgroundColor: "#556B2F", padding: "10px", borderRadius: "6px" }}
->
-  <h2 className="h4 mb-0">Pakistan Tours in Exotic Holiday Destinations</h2>
-</div>
-      {/* <div className="d-flex justify-content-between align-items-center mb-3">
-        <h2 className="h4 mb-0">Pakistan Tours in Exotic Holiday Destinations</h2>
-      </div> */}
+    <div className="container mt-4">
+      <h1 className="text-center mb-4">All Tours</h1>
+
       <div className="row">
-        {tours.map((tour, idx) => (
-          <div className="col-sm-6 col-md-4 col-lg-3 mb-4" key={tour._id ?? idx}>
-            <div className="card" style={{ width: "100%", height: "380px" }}>
-              <img
-                src={tour.images[0] ? `http://localhost:5000/${tour.images[0]}` : "https://via.placeholder.com/200"}
-                className="card-img-top"
-                alt={tour.name}
-                style={{ height: "200px", objectFit: "cover" }}
-              />
-              <div className="card-body d-flex flex-column justify-content-between">
-                <div>
-                  <h5 className="card-title">{tour.name}</h5>
-                  <p className="card-text">{tour.description}</p>
-                </div>
-                  <Link to={`/${tour.name.toLowerCase().replace(/\s/g, "")}/${tour._id}`} className="btn btn-primary mt-2">
-                  More Details
+        {featuredTours.map((tour, index) =>
+          tour ? (
+            <div className="col-md-4 mb-4" key={tour._id}>
+              <div className="card shadow-sm">
+                <img
+                  src={`http://localhost:5000/${tour.images?.[0] || ""}`}
+                  className="card-img-top"
+                  style={{ height: "200px", objectFit: "cover" }}
+                  alt="tour"
+                />
+                <div className="card-body">
+                  <h5>{tour.name}</h5>
+                  <p>{tour.description}</p>
+                  <p>
+                    <strong>{tour.price}</strong>
+                  </p>
+                  <Link
+                    to={`/category/${String(tour.location || "").toLowerCase()}`}
+                    className="btn btn-primary w-100"
+                  >
+                    More Details
                   </Link>
-                {/* <Link to={`/hunza/${tour._id}`} className="btn btn-primary mt-2">
-                  More Details
-                </Link> */}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ) : (
+            <div className="col-md-4 mb-4" key={index}>
+              <div className="card shadow-sm">
+                <div
+                  className="card-img-top bg-secondary d-flex align-items-center justify-content-center"
+                  style={{ height: "200px", color: "white" }}
+                >
+                  No Image
+                </div>
+                <div className="card-body">
+                  <h5>{fixedLocations[index].toUpperCase()} Tours</h5>
+                  <p>No tour added yet.</p>
+                  <Link
+                    to={`/category/${fixedLocations[index]}`}
+                    className="btn btn-outline-primary w-100"
+                  >
+                    View Category
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )
+        )}
       </div>
-    </section>
+    </div>
   );
 }
+
 export default Tours;

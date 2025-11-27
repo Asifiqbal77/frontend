@@ -13,22 +13,22 @@ function Booking() {
   </div>
   <div className="col-12">
     <label for="inputAddress" className="form-label">Address</label>
-    <input type="text" className="form-control" id="inputAddress" placeholder="1234 Main St"/>
+    <input type="text" className="form-control" id="inputAddress" placeholder="Present address"/>
   </div>
   <div class="col-12">
     <label for="inputAddress2" className="form-label">Address 2</label>
-    <input type="text" className="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor"/>
+    <input type="text" className="form-control" id="inputAddress2" placeholder="permanent Address"/>
   </div>
-  <div class="col-md-4">
+  <div class="col-md-6">
     <label for="inputCity" className="form-label">City</label>
     <input type="text" className="form-control" id="inputCity"/>
   </div>
-  <div className="col-md-4">
+  {/* <div className="col-md-4">
     <label for="inputState" className="form-label">State</label>
     <input type="text" className="form-lable" id="inputState" />
-  </div> 
+  </div>  */}
 
-  <div className="col-md-4">
+  <div className="col-md-6">
     <label for="inputZip" class="form-label">Zip</label>
     <input type="text" class="form-control" id="inputZip"/>
   </div>

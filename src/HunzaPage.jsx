@@ -1,95 +1,95 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { getTourById, getTours } from "./services/api";
-//from chatgpt
-import {Link} from "react-router-dom";
+// import React, { useEffect, useState } from "react";
+// import { useParams, useNavigate } from "react-router-dom";
+// import { getTourById, getTours } from "./services/api";
+// //from chatgpt
+// import {Link} from "react-router-dom";
 
-function HunzaPage() {
-  const navigate = useNavigate();
-  const { id } = useParams();
-  const [tour, setTour] = useState(null);
-  const [hunzaTours, setHunzaTours] = useState([]);
+// function HunzaPage() {
+//   const navigate = useNavigate();
+//   const { id } = useParams();
+//   const [tour, setTour] = useState(null);
+//   const [hunzaTours, setHunzaTours] = useState([]);
 
-  useEffect(() => {
-    async function fetchTour() {
-      try {
-        // Fetch selected tour by ID
-        if (id) {
-          const res = await getTourById(id);
-          setTour(res.data);
-        }
+//   useEffect(() => {
+//     async function fetchTour() {
+//       try {
+//         // Fetch selected tour by ID
+//         if (id) {
+//           const res = await getTourById(id);
+//           setTour(res.data);
+//         }
 
-        // Fetch all tours
-        const all = await getTours();
+//         // Fetch all tours
+//         const all = await getTours();
 
-        // Filter Hunza tours
-        const filtered = all.data.filter(t =>
-          t.name.toLowerCase().includes("hunza")
-        );
+//         // Filter Hunza tours
+//         const filtered = all.data.filter(t =>
+//           t.name.toLowerCase().includes("hunza")
+//         );
 
-        setHunzaTours(filtered);
+//         setHunzaTours(filtered);
 
-      } catch (err) {
-        alert("Failed to fetch tours");
-      }
-    }
-    fetchTour();
-  }, [id]);
+//       } catch (err) {
+//         alert("Failed to fetch tours");
+//       }
+//     }
+//     fetchTour();
+//   }, [id]);
 
-  const handleClick = () => {
-    navigate("/booking");
-  };
+//   const handleClick = () => {
+//     navigate("/booking");
+//   };
 
-  if (!tour) return <div>Loading...</div>;
+//   if (!tour) return <div>Loading...</div>;
 
-  return (
-    <div className="container mt-5">
+//   return (
+//     <div className="container mt-5">
 
-      {/* Selected Tour Heading */}
-      <h2 className="h4 mb-3" style={{ fontWeight: 600 }}>
-        {tour.name}
-      </h2>
-      <p className="mb-4">{tour.description}</p>
+//       {/* Selected Tour Heading */}
+//       <h2 className="h4 mb-3" style={{ fontWeight: 600 }}>
+//         {tour.name}
+//       </h2>
+//       <p className="mb-4">{tour.description}</p>
 
-      <hr />
+//       <hr />
 
-      <h3 className="h5 mt-4 mb-3">More Hunza Valley Tours</h3>
+//       <h3 className="h5 mt-4 mb-3">More Hunza Valley Tours</h3>
 
-      <div className="row">
-        {hunzaTours.map((ht, idx) => (
-          <div className="col-md-4 mb-4" key={idx}>
-            <div className="card h-100 shadow-sm" style={{ width: "100%", height: "420px" }}>
-              <img
-                src={ht.images[0] ? `http://localhost:5000/${ht.images[0]}` : "https://via.placeholder.com/200"}
-                className="card-img-top"
-                alt={ht.name}
-                style={{ height: "220px", objectFit: "cover" }}
-              />
+//       <div className="row">
+//         {hunzaTours.map((ht, idx) => (
+//           <div className="col-md-4 mb-4" key={idx}>
+//             <div className="card h-100 shadow-sm" style={{ width: "100%", height: "420px" }}>
+//               <img
+//                 src={ht.images[0] ? `http://localhost:5000/${ht.images[0]}` : "https://via.placeholder.com/200"}
+//                 className="card-img-top"
+//                 alt={ht.name}
+//                 style={{ height: "220px", objectFit: "cover" }}
+//               />
 
-              <div className="card-body d-flex flex-column justify-content-between">
-                <div>
-                  <h5 className="card-title">{ht.name}</h5>
-                  <p className="card-text">{ht.description}</p>
-                </div>
+//               <div className="card-body d-flex flex-column justify-content-between">
+//                 <div>
+//                   <h5 className="card-title">{ht.name}</h5>
+//                   <p className="card-text">{ht.description}</p>
+//                 </div>
 
-                <div>
-                  <h6 className="text-primary mb-3">{ht.price}</h6>
-                  <button className="btn btn-primary w-100" onClick={handleClick}>
-                    Book Now
-                  </button>
-                </div>
-              </div>
+//                 <div>
+//                   <h6 className="text-primary mb-3">{ht.price}</h6>
+//                   <button className="btn btn-primary w-100" onClick={handleClick}>
+//                     Book Now
+//                   </button>
+//                 </div>
+//               </div>
 
-            </div>
-          </div>
-        ))}
-      </div>
+//             </div>
+//           </div>
+//         ))}
+//       </div>
 
-    </div>
-  );
-}
+//     </div>
+//   );
+// }
 
-export default HunzaPage;
+// export default HunzaPage;
 
 
 

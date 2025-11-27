@@ -1,31 +1,86 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import { getTourById, updateTour } from "./services/api";
 
 function UpdateTour() {
-  const tours = [
-    {
-      name: "Hunza Valley Tour",
-      location: "Hunza Valley, Gilgit-Baltistan",
-      duration: "5 Days",
-      price: "25,000",
-    },
-    {
-      name: "Naran Kaghan Adventure",
-      location: "Naran, Kaghan Valley",
-      duration: "4 Days",
-      price: "20,000",
-    },
-    {
-      name: "Skardu Expedition",
-      location: "Skardu, Gilgit-Baltistan",
-      duration: "7 Days",
-      price: "35,000",
-    },
-  ];
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-  function handleEdit(tourName) {
-    alert(`Edit clicked for ${tourName}`);
+  const [form, setForm] = useState({
+    name: "",
+    location: "",
+    duration: "",
+    price: "",
+    maxPeople: "",
+    imageUrl: "",
+    description: "",
+  });
+
+  const [files, setFiles] = useState([]);
+
+  useEffect(() => {
+    if (id) fetchTour();
+    // eslint-disable-next-line
+  }, [id]);
+
+  async function fetchTour() {
+    try {
+      const res = await getTourById(id);
+      const t = res.data;
+      setForm({
+        name: t.name || "",
+        location: t.location || "",
+        duration: t.duration || "",
+        price: t.price || "",
+        maxPeople: t.maxPeople || "",
+        imageUrl: (t.images && t.images[0]) || "",
+        description: t.description || "",
+      });
+    } catch (err) {
+      console.error(err);
+      alert("Failed to load tour");
+    }
+  }
+
+  function updateField(key, value) {
+    setForm((f) => ({ ...f, [key]: value }));
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    try {
+      let payload;
+      if (files && files.length > 0) {
+        payload = new FormData();
+        payload.append("name", form.name.trim());
+        payload.append("location", form.location.trim());
+        payload.append("duration", form.duration.trim());
+        payload.append("price", form.price);
+        payload.append("maxPeople", form.maxPeople);
+        payload.append("description", form.description.trim());
+        Array.from(files).forEach((file) => payload.append("images", file));
+      } else {
+        payload = {
+          name: form.name.trim(),
+          location: form.location.trim(),
+          duration: form.duration.trim(),
+          price: form.price,
+          maxPeople: form.maxPeople,
+          imageUrl: form.imageUrl.trim(),
+          description: form.description.trim(),
+        };
+      }
+
+      const res = await updateTour(id, payload);
+      alert(res.data.message || "Tour updated");
+      navigate("/manage");
+    } catch (err) {
+      console.error(err);
+      alert(err?.response?.data?.message || "Failed to update tour");
+    }
   }
 
   return (
@@ -33,39 +88,56 @@ function UpdateTour() {
       <div className="card shadow-sm">
         <div className="card-body">
           <h5 className="fw-bold mb-3">Update Tour</h5>
-          <p className="text-muted">Select a tour to update from the table below</p>
+          <p className="text-muted">Select a tour to update from the form below</p>
 
-          <div className="table-responsive">
-            <table className="table table-bordered table-hover align-middle">
-              <thead className="table-light">
-                <tr>
-                  <th>Tour Name</th>
-                  <th>Location</th>
-                  <th>Duration</th>
-                  <th>Price (PKR)</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tours.map((tour, index) => (
-                  <tr key={index}>
-                    <td>{tour.name}</td>
-                    <td>{tour.location}</td>
-                    <td>{tour.duration}</td>
-                    <td>{tour.price}</td>
-                    <td>
-                      <button
-                        className="btn btn-outline-secondary btn-sm"
-                        onClick={() => handleEdit(tour.name)}
-                      >
-                        <i className="bi bi-pencil me-1"></i> Edit
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <form onSubmit={handleSubmit}>
+            <div className="row g-3">
+              <div className="col-md-6">
+                <label className="form-label">Tour Name</label>
+                <input className="form-control" value={form.name} onChange={(e) => updateField("name", e.target.value)} />
+              </div>
+
+              <div className="col-md-6">
+                <label className="form-label">Location</label>
+                <input className="form-control" value={form.location} onChange={(e) => updateField("location", e.target.value)} />
+              </div>
+
+              <div className="col-md-6">
+                <label className="form-label">Duration</label>
+                <input className="form-control" value={form.duration} onChange={(e) => updateField("duration", e.target.value)} />
+              </div>
+
+              <div className="col-md-6">
+                <label className="form-label">Price (PKR)</label>
+                <input type="number" className="form-control" value={form.price} onChange={(e) => updateField("price", e.target.value)} />
+              </div>
+
+              <div className="col-md-6">
+                <label className="form-label">Max People</label>
+                <input type="number" className="form-control" value={form.maxPeople} onChange={(e) => updateField("maxPeople", e.target.value)} />
+              </div>
+
+              <div className="col-md-6">
+                <label className="form-label">Image URL (or upload)</label>
+                <input className="form-control" value={form.imageUrl} onChange={(e) => updateField("imageUrl", e.target.value)} />
+                <div className="form-text">If you upload files below they will replace current images.</div>
+              </div>
+
+              <div className="col-12">
+                <label className="form-label">Upload Images (optional)</label>
+                <input type="file" multiple className="form-control" onChange={(e) => setFiles(e.target.files)} />
+              </div>
+
+              <div className="col-12">
+                <label className="form-label">Description</label>
+                <textarea className="form-control" value={form.description} onChange={(e) => updateField("description", e.target.value)} />
+              </div>
+            </div>
+
+            <div className="mt-3">
+              <button className="btn btn-primary" type="submit">Save Changes</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

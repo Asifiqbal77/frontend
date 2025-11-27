@@ -21,7 +21,7 @@ if (savedToken) {
   API.defaults.headers.common["Authorization"] = `Bearer ${savedToken}`;
 }
 
-// -------------- API FUNCTIONS (nothing changed) --------------
+// -------------- API FUNCTIONS --------------
 export const registerUser = async (userData) => {
   return await API.post("/register", userData);
 };
@@ -38,36 +38,24 @@ export const getTourById = async (id) => {
   return await API.get(`/tours/${id}`);
 };
 
+export const createTour = async (payload) => {
+  if (payload instanceof FormData) {
+    return await API.post("/tours", payload);
+  } else {
+    return await API.post("/tours", payload);
+  }
+};
+
+export const updateTour = async (id, payload) => {
+  if (payload instanceof FormData) {
+    return await API.put(`/tours/${id}`, payload);
+  } else {
+    return await API.put(`/tours/${id}`, payload);
+  }
+};
+
+export const deleteTour = async (id) => {
+  return await API.delete(`/tours/${id}`);
+};
+
 export default API;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import axios from "axios";
-
-// const API = axios.create({
-//   baseURL: "http://localhost:5000/api"
-// });
-
-// export const registerUser = async (userData) => {
-//   return await API.post("/register", userData);
-// };
-// export const loginUser = async (userData) => {
-//   return await API.post("/login", userData);
-// };
-// export const getTours = async () => {
-//   return await API.get("/tours");
-// };
-// export const getTourById = async (id) => {
-//   return await API.get(`/tours/${id}`);
-// };
