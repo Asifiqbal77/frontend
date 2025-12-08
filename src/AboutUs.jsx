@@ -1,7 +1,7 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import deosai from "./assets/deosai.jpg"; // replace with your real banner image
-import pic2 from "./assets/pic2.avif"; // replace with your real team image
+import deosai from "./assets/deosai.jpg";
+import pic2 from "./assets/pic2.avif";
 
 function AboutUs() {
   return (

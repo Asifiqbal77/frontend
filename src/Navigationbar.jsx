@@ -1,4 +1,3 @@
-
 import weblogo from "./assets/weblogo.png";
 import { Link } from "react-router-dom";
 function Navigationbar() {
@@ -64,11 +63,6 @@ function Navigationbar() {
               </a>
             </li>
 
-            <li className="nav-item">
-              <a className="nav-link text-white" href="#">
-                Blog
-              </a>
-            </li>
            
             <li className="nav-item">
               <Link to ='/aboutus' className="nav-link text-white">
@@ -76,10 +70,13 @@ function Navigationbar() {
               </Link>
             </li>
 
-            {/* On large screens → Login button shows normally 
-                On medium screens → smaller button 
-                On small screens → full width button */}
-            <li className="nav-item mt-2 mt-lg-0">
+             <li className="nav-item">
+              <a className="nav-link text-white">
+                Blogs
+              </a>
+            </li>
+
+            <li className="nav-item mt-2 mt-lg-0 ">
               <Link to = '/login'
                 className="btn btn-outline-light btn-sm ms-lg-2 w-100 w-md-auto"
               >

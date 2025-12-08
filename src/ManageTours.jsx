@@ -46,7 +46,7 @@ function ManageTours() {
           </button>
         </li>
         <li className="nav-item" role="presentation">
-          <button
+          {/* <button
             className="nav-link"
             id="update-tab"
             data-bs-toggle="tab"
@@ -57,7 +57,7 @@ function ManageTours() {
             aria-selected="false"
           >
             Update Tour
-          </button>
+          </button> */}
         </li>
         <li className="nav-item" role="presentation">
           <button
@@ -95,14 +95,14 @@ function ManageTours() {
           <CreateTour />
         </div>
 
-        <div
+        {/* <div
           className="tab-pane fade"
           id="update"
           role="tabpanel"
           aria-labelledby="update-tab"
         >
           <UpdateTour />
-        </div>
+        </div> */}
 
         <div
           className="tab-pane fade"

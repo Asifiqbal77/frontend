@@ -60,21 +60,18 @@ function CategoryPage() {
                   <p>
                     <strong>{tour.price}</strong>
                   </p>
-
-                        <Link to="/booking" state={{
-                            tourId: tour._id,
-                            tourName: tour.name,
-                            amountCents: 55000,    // pass integer in smallest unit
-                           currency: "usd"
-                        }}>
-                                Book Now
-                            </Link>
-
-
-                        {/* npm  */}
-                    {/* <Link to="/booking" className="btn btn-primary w-100">
-                      Book Now
-                      </Link> */}
+                          <Link 
+  to="/booking" 
+  state={{
+    tourId: tour._id,
+    tourName: tour.name,
+    amountCents: 55000,
+    currency: "usd"
+  }} 
+  style={{ border: "2px solid #000", padding: "8px 16px", borderRadius: "6px", textDecoration: "none" }}
+>
+  Book Now
+</Link>
                 </div>
               </div>
             </div>
