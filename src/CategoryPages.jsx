@@ -1,38 +1,23 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { getTours } from "./services/api";
-import { Link } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import { ToursContext } from "./Contexts/ToursContext";
 
 function CategoryPage() {
-  // Route provides :location, but keep using "region" in the component logic
   const { location } = useParams();
-  const region = location; // map to preserve your variable usage
-
-  const [tours, setTours] = useState([]);
+  const region = location; // keep variable consistent
+  const { tours } = useContext(ToursContext); // use tours from context
+  const [filteredTours, setFilteredTours] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // useEffect runs whenever 'region' or 'tours' changes
   useEffect(() => {
-    async function loadData() {
-      try {
-        const res = await getTours();
-
-        // Filter by region (location field)
-        const filtered = (res?.data || []).filter(
-          (tour) =>
-            String(tour.location || "").toLowerCase() ===
-            String(region || "").toLowerCase()
-        );
-
-        setTours(filtered);
-      } catch (error) {
-        console.error("Error loading category:", error);
-      }
-
-      setLoading(false);
-    }
-
-    loadData();
-  }, [region]);
+    setLoading(true);
+    const filtered = (tours || []).filter(
+      (tour) => String(tour.location || "").toLowerCase() === region.toLowerCase()
+    );
+    setFilteredTours(filtered);
+    setLoading(false);
+  }, [region, tours]);
 
   if (loading) return <p className="text-center mt-4">Loading...</p>;
 
@@ -41,10 +26,10 @@ function CategoryPage() {
       <h1 className="text-capitalize mb-4">{region} Packages</h1>
 
       <div className="row">
-        {tours.length === 0 ? (
+        {filteredTours.length === 0 ? (
           <p>No packages found for {region}.</p>
         ) : (
-          tours.map((tour) => (
+          filteredTours.map((tour) => (
             <div className="col-md-4 mb-4" key={tour._id}>
               <div className="card shadow-sm">
                 <img
@@ -53,25 +38,27 @@ function CategoryPage() {
                   style={{ height: "200px", objectFit: "cover" }}
                   alt="tour"
                 />
-
                 <div className="card-body">
                   <h5>{tour.name}</h5>
                   <p>{tour.description}</p>
-                  <p>
-                    <strong>{tour.price}</strong>
-                  </p>
-                          <Link 
-  to="/booking" 
-  state={{
-    tourId: tour._id,
-    tourName: tour.name,
-    amountCents: 55000,
-    currency: "usd"
-  }} 
-  style={{ border: "2px solid #000", padding: "8px 16px", borderRadius: "6px", textDecoration: "none" }}
->
-  Book Now
-</Link>
+                  <p><strong>{tour.price}</strong></p>
+                  <Link
+                    to="/booking"
+                    state={{
+                      tourId: tour._id,
+                      tourName: tour.name,
+                      amountCents: 55000,
+                      currency: "usd",
+                    }}
+                    style={{
+                      border: "2px solid #000",
+                      padding: "8px 16px",
+                      borderRadius: "6px",
+                      textDecoration: "none",
+                    }}
+                  >
+                    Book Now
+                  </Link>
                 </div>
               </div>
             </div>
@@ -83,3 +70,108 @@ function CategoryPage() {
 }
 
 export default CategoryPage;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//original code before context and useeffects
+// import React, { useEffect, useState } from "react";
+// import { useParams } from "react-router-dom";
+// import { getTours } from "./services/api";
+// import { Link } from "react-router-dom";
+
+// function CategoryPage() {
+//   // Route provides :location, but keep using "region" in the component logic
+//   const { location } = useParams();
+//   const region = location; // map to preserve your variable usage
+
+//   const [tours, setTours] = useState([]);
+//   const [loading, setLoading] = useState(true);
+
+//   useEffect(() => {
+//     async function loadData() {
+//       try {
+//         const res = await getTours();
+
+//         // Filter by region (location field)
+//         const filtered = (res?.data || []).filter(
+//           (tour) =>
+//             String(tour.location || "").toLowerCase() ===
+//             String(region || "").toLowerCase()
+//         );
+
+//         setTours(filtered);
+//       } catch (error) {
+//         console.error("Error loading category:", error);
+//       }
+
+//       setLoading(false);
+//     }
+
+//     loadData();
+//   }, [region]);
+
+//   if (loading) return <p className="text-center mt-4">Loading...</p>;
+
+//   return (
+//     <div className="container mt-4">
+//       <h1 className="text-capitalize mb-4">{region} Packages</h1>
+
+//       <div className="row">
+//         {tours.length === 0 ? (
+//           <p>No packages found for {region}.</p>
+//         ) : (
+//           tours.map((tour) => (
+//             <div className="col-md-4 mb-4" key={tour._id}>
+//               <div className="card shadow-sm">
+//                 <img
+//                   src={`http://localhost:5000/${tour.images?.[0] || ""}`}
+//                   className="card-img-top"
+//                   style={{ height: "200px", objectFit: "cover" }}
+//                   alt="tour"
+//                 />
+
+//                 <div className="card-body">
+//                   <h5>{tour.name}</h5>
+//                   <p>{tour.description}</p>
+//                   <p>
+//                     <strong>{tour.price}</strong>
+//                   </p>
+//                           <Link 
+//   to="/booking" 
+//   state={{
+//     tourId: tour._id,
+//     tourName: tour.name,
+//     amountCents: 55000,
+//     currency: "usd"
+//   }} 
+//   style={{ border: "2px solid #000", padding: "8px 16px", borderRadius: "6px", textDecoration: "none" }}
+// >
+//   Book Now
+// </Link>
+//                 </div>
+//               </div>
+//             </div>
+//           ))
+//         )}
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default CategoryPage;
