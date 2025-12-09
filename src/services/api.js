@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL:"http://localhost:5000/api",
+  baseURL:"https://pakpeaksand-plainserver.onrender.com/api",
 });
 
 // -------------- SAVE TOKEN IN LOCAL STORAGE + SET HEADER --------------

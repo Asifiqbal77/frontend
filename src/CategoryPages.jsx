@@ -33,7 +33,6 @@ function CategoryPage() {
             <div className="col-md-4 mb-4" key={tour._id}>
               <div className="card shadow-sm">
                 <img
-                  // src={`http://localhost:5000/${tour.images?.[0] || ""}`}
                   src={`https://pakpeaksand-plainserver.onrender.com/${tour.images?.[0] || ""}`}
                   className="card-img-top"
                   style={{ height: "200px", objectFit: "cover" }}
