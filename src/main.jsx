@@ -8,17 +8,17 @@ import "bootstrap/dist/js/bootstrap.js";
 import { RouterProvider } from 'react-router-dom';
 import route from './Paths.jsx'
 
-// import { ToursProvider } from './Contexts/TourContext';
+
 import { ToursProvider } from "./Contexts/ToursContext";
 
-import { BookingProvider } from './Contexts/BookingContext';
+//import { BookingProvider } from './Contexts/BookingContext';
 
 createRoot(document.getElementById('root')).render(
    <StrictMode>
       <ToursProvider>
-        <BookingProvider>
+        {/* <BookingProvider> */}
           <RouterProvider router={route} />
-        </BookingProvider>
+        {/* </BookingProvider> */}
       </ToursProvider>
    </StrictMode>
 );
